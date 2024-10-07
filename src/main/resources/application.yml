@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+api:
+  domain: rt.data.gov.hk
+  version: v1
+  pathA: transport
+  pathB: mtr
+  pathC: getSchedule.php
+
+# // https://
+# rt.data.gov.hk
+# v1
+# transport
+# mtr
+# getSchedule.php
+# ?line=${line}&sta=${station}
