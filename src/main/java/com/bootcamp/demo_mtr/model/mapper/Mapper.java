@@ -1,62 +1,68 @@
 package com.bootcamp.demo_mtr.model.mapper;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.zip.DataFormatException;
 import org.springframework.stereotype.Component;
 import com.bootcamp.demo_mtr.model.MtrDTO;
+import com.bootcamp.demo_mtr.model.MtrDTO.LineDTO;
+import com.bootcamp.demo_mtr.model.MtrDTO.StationDTO;
 import com.bootcamp.demo_mtr.model.MtrDTO.TrainDTO;
 import com.bootcamp.demo_mtr.model.TrainDataResponse;
 
 @Component
 public class Mapper {
-  public MtrDTO map(TrainDataResponse trainDataResponse,String line ,String station) {
-    if (trainDataResponse == null || trainDataResponse.getData() == null) {
-      return MtrDTO.builder()//
-      .build();
-    }
-String lineKey = this.concatLineAndStation(line, station);
-    TrainDataResponse.LineInfo lineInfo = trainDataResponse.getData()
-        .getLineInfo()//
-        .get(lineKey);
-        // .values().stream()//
-        // .findFirst()//
-        // .orElse(null);
-    if (lineInfo == null) {
-      return MtrDTO.builder().build();
-    }
 
-    return MtrDTO.builder()//
-    .down(mapTrains(lineInfo.getDown()))//
-        .up(mapTrains(lineInfo.getUp()))//
-        .build();
-  }
+    public MtrDTO map(TrainDataResponse trainDataResponse, String station) {
+        if (trainDataResponse == null || trainDataResponse.getData() == null) {
+            return MtrDTO.builder().build();
+        }
 
-  List<TrainDTO> mapTrains(List<TrainDataResponse.Train> trains) {
-    if (trains == null) {
-      return null;
+        Map<String, TrainDataResponse.LineInfo> lineInfoMap = trainDataResponse.getData().getLineInfo();
+        List<LineDTO> lines = lineInfoMap.entrySet().stream()
+                .filter(entry -> entry.getKey().contains(station))
+                .map(entry -> mapLine(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return MtrDTO.builder()
+                .stations(List.of(StationDTO.builder()
+                        .station(station)
+                        .lines(lines)
+                        .build()))
+                .build();
     }
 
-    return trains.stream().map(this::map).collect(Collectors.toList());
-  }
-
-  TrainDTO map(TrainDataResponse.Train train) {
-    // Optional.ofNullable(train).orElseThrow(()-> throw )
-    if (train == null) {
-      return null;
+    LineDTO mapLine(String lineKey, TrainDataResponse.LineInfo lineInfo) {
+        return LineDTO.builder()
+                .line(lineKey.split("-")[0])
+                .up(mapTrains(lineInfo.getUp()))
+                .down(mapTrains(lineInfo.getDown()))
+                .build();
     }
 
-    return TrainDTO.builder()//
-        .seq(train.getSeq())//
-        .dest(train.getDest())//
-        .plat(train.getPlat())//
-        .countDownTime(this.countTime(train.getTime()))//
-        .build();
-  }
+    List<TrainDTO> mapTrains(List<TrainDataResponse.Train> trains) {
+        if (trains == null) {
+            return null;
+        }
+
+        return trains.stream().map(this::mapTrain).collect(Collectors.toList());
+    }
+
+    TrainDTO mapTrain(TrainDataResponse.Train train) {
+        if (train == null) {
+            return null;
+        }
+
+        return TrainDTO.builder()
+                .seq(train.getSeq())
+                .dest(train.getDest())
+                .plat(train.getPlat())
+                .countDownTime(this.countTime(train.getTime()))
+                .build();
+    }
 
 
   String countTime(String time) {
@@ -72,4 +78,6 @@ String lineKey = this.concatLineAndStation(line, station);
   String concatLineAndStation(String line, String station) {
     return line.concat("-").concat(station);
   }
+
+
 }

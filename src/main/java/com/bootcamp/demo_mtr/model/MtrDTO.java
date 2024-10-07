@@ -1,7 +1,6 @@
 package com.bootcamp.demo_mtr.model;
 
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +15,30 @@ import lombok.ToString;
 @ToString
 @Builder
 public class MtrDTO {
-  private List<TrainDTO> down;
-  private List<TrainDTO> up;
+  private List<StationDTO> stations;
+
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Getter
+  @Setter
+  @ToString
+  @Builder
+  public static class StationDTO {
+    private String station;
+    private List<LineDTO> lines;
+  }
+
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Getter
+  @Setter
+  @ToString
+  @Builder
+  public static class LineDTO {
+    private String line;
+    private List<TrainDTO> up;
+    private List<TrainDTO> down;
+  }
 
   @AllArgsConstructor
   @NoArgsConstructor

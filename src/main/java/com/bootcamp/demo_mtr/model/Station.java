@@ -42,6 +42,8 @@ public enum Station {
     TUM("Tuen Mun"),
     NOP("North Point"),
     QUB("Quarry Bay"),
+    TAK("Tai Koo"),
+    SWH("Sai Wan Ho"),
     YAT("Yau Tong"),
     TIK("Tiu Keng Leng"),
     TKO("Tseung Kwan O"),

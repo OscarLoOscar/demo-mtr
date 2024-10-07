@@ -17,9 +17,10 @@ public class MtrController implements MTROperation {
   @Autowired
   private MTRService mtrService;
 
+
   @Override
-  public MtrDTO getTime(String line, String station) {
-    return mtrService.getTime(line, station);
+  public MtrDTO getTime(String station) {
+    return mtrService.getTime(station);
   }
 
 }

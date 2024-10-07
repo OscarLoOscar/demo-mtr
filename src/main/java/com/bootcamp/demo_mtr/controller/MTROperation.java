@@ -6,9 +6,7 @@ import com.bootcamp.demo_mtr.model.MtrDTO;
 
 public interface MTROperation {
 
-  @GetMapping("/getTime")
-  MtrDTO getTime(@RequestParam String line, @RequestParam String station);
 
-  // v1/-> PathVariable
-  // ?page=1 -> RequestParam
+  @GetMapping("/getTime")
+  MtrDTO getTime(@RequestParam String station);
 }
