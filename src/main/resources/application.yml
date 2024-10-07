@@ -4,9 +4,9 @@ server:
 api:
   domain: rt.data.gov.hk
   version: v1
-  pathA: transport
-  pathB: mtr
-  pathC: getSchedule.php
+  pathA: /transport
+  pathB: /mtr
+  pathC: /getSchedule.php
 
 # // https://
 # rt.data.gov.hk

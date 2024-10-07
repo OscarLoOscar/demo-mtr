@@ -1,7 +1,9 @@
 package com.bootcamp.demo_mtr.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +37,13 @@ public class TrainDataResponse {
     @ToString
     @Builder
     public static class Data {
-        private Map<String, LineInfo> lineInfo;
+        @Builder.Default
+        private Map<String, LineInfo> lineInfo = new HashMap<>();
 
+        @JsonAnySetter
+        public void addLineInfo(String key, LineInfo value) {
+            this.lineInfo.put(key, value);
+        }
     }
 
     @AllArgsConstructor
@@ -51,9 +58,12 @@ public class TrainDataResponse {
 
         @JsonProperty("sys_time")
         private String sysTime;
+        
+        @JsonProperty("DOWN")
         private List<Train> down;
-        private List<Train> up;
 
+        @JsonProperty("UP")
+        private List<Train> up;
     }
 
     @AllArgsConstructor
